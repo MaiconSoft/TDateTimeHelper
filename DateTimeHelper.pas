@@ -55,7 +55,7 @@ type
       Char = #0; aTimeSeparator: Char = #0): TDateTime; static; inline;
 
    // Parse a string as TDateTime, using local string ex. ('en-US')
-    class function ParseLocal(Date: string; local: string = ''): TDateTime;
+    class function ParseLocal(Date: string; alocal: string = ''): TDateTime;
       static; inline;
   public
     class function Create(const aYear, aMonth, aDay: Word): TDateTime; overload;
@@ -494,14 +494,14 @@ begin
   Result := StrToDateTime(Date, fs);
 end;
 
-class function TDateTimeHelper.ParseLocal(Date: string; local: string = ''): TDateTime;
+class function TDateTimeHelper.ParseLocal(Date: string; alocal: string = ''): TDateTime;
 var
   fs: TFormatSettings;
 begin
-  if local.Trim.IsEmpty then
+  if alocal.Trim.IsEmpty then
     fs := TFormatSettings.Create(SysLocale.DefaultLCID)
   else
-    fs := TFormatSettings.Create(local);
+    fs := TFormatSettings.Create(alocal);
 
   Result := StrToDateTime(Date, fs);
 end;
@@ -514,7 +514,7 @@ end;
 
 class function TDateTimeHelper.CreateLocal(Date, local: string): TDateTime;
 begin
-  Result:= ParseLocal(Date,local);
+  Result := ParseLocal(Date, local);
 end;
 
 end.
