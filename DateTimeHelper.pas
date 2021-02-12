@@ -28,7 +28,7 @@ unit DateTimeHelper;
 interface
 
 uses
-  System.SysUtils, System.Types, System.DateUtils;
+  System.SysUtils, System.Types, System.DateUtils, LayoutDateTime;
 
 type
   TDateTimeHelper = record helper for TDateTime
@@ -68,6 +68,8 @@ type
       static; inline;
     class function CreateUnixTime(const Value: Int64): TDateTime; static; inline;
     class function CreateTotalSeconds(const Value: Int64): TDateTime; static; inline;
+    class function CreateLayout(const Layout, Value: string; aLocal: string = ''):
+      TDateTime; static; inline;
     class property Now: TDateTime read GetNow;
     class property Today: TDateTime read GetToday;
     class property Yesterday: TDateTime read GetYesterDay;
@@ -86,6 +88,8 @@ type
     property UnixTime: Int64 read GetUnixTime;
     property TotalSeconds: Int64 read GetTotalSecounds;
     function ToString(const aFormatStr: string = ''): string; inline;
+    function ToStringLayout(const Layout: string; const aLocal: string = ''):
+      string; inline;
     function StartOfYear: TDateTime; inline;
     function EndOfYear: TDateTime; inline;
     function StartOfMonth: TDateTime; inline;
@@ -400,6 +404,12 @@ begin
     Result := FormatDateTime(aFormatStr, Self);
 end;
 
+function TDateTimeHelper.ToStringLayout(const Layout: string; const aLocal:
+  string = ''): string;
+begin
+  Result := TLayoutDateTime.Format(Layout, Self, aLocal);
+end;
+
 function TDateTimeHelper.WeeksBetween(const aDateTime: TDateTime): Integer;
 begin
   Result := System.DateUtils.WeeksBetween(Self, aDateTime);
@@ -510,6 +520,12 @@ class function TDateTimeHelper.Create(Date, aFormat: string; aDateSeparator,
   aTimeSeparator: Char): TDateTime;
 begin
   Result := Parse(Date, aFormat, aDateSeparator, aTimeSeparator);
+end;
+
+class function TDateTimeHelper.CreateLayout(const Layout, Value: string; aLocal:
+  string): TDateTime;
+begin
+  Result := TLayoutDateTime.Parse(Layout, Value, aLocal);
 end;
 
 class function TDateTimeHelper.CreateLocal(Date, local: string): TDateTime;
